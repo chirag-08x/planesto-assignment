@@ -7,7 +7,7 @@ import Obstacle from "./Obstacle";
 const Game = () => {
   const [obstaclePosition, setObstaclePosition] = useState(100);
   const [isJumping, setIsJumping] = useState(false);
-  const [isGameRunning, setIsGameRunning] = useState(true);
+  const [isGameRunning, setIsGameRunning] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [score, setScore] = useState(0);
 
@@ -80,7 +80,14 @@ const Game = () => {
 
   useEffect(() => {
     const handleSpaceBar = (e) => {
-      if (e.code === "Space" && isGameRunning) jump();
+      if (e.code === "Space") {
+        if (isGameRunning) {
+          jump();
+        } else {
+          // setIsGameRunning(true);
+          restartGame();
+        }
+      }
     };
 
     const handleTouch = () => {
@@ -111,6 +118,8 @@ const Game = () => {
           <Player isJumping={isJumping} isGameRunning={isGameRunning} />
           <Obstacle obstaclePosition={obstaclePosition} />
         </div>
+
+        <h2>{!isGameRunning && "Press SPACE to start the Game"} </h2>
       </section>
     </Wrapper>
   );
@@ -123,6 +132,11 @@ const Wrapper = styled.div`
     > h1 {
       text-align: right;
       margin-right: 5px;
+    }
+
+    > h2 {
+      text-align: center;
+      color: #515050;
     }
 
     > div {
