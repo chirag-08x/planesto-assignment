@@ -99,7 +99,7 @@ const Game = () => {
               </button>
             </div>
           )}
-          <Player isJumping={isJumping} />
+          <Player isJumping={isJumping} isGameRunning={isGameRunning} />
           <Obstacle obstaclePosition={obstaclePosition} />
         </div>
       </section>
