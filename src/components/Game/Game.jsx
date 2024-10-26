@@ -65,6 +65,15 @@ const Game = () => {
 
   useEffect(() => {
     if (isGameRunning) {
+      const interval = setInterval(() => {
+        setScore((prev) => prev + 1);
+      }, 150);
+      return () => clearInterval(interval);
+    }
+  }, [isGameRunning]);
+
+  useEffect(() => {
+    if (isGameRunning) {
       checkCollision();
     }
   }, [obstaclePosition, isJumping, isGameRunning]);
@@ -99,7 +108,7 @@ const Game = () => {
               </button>
             </div>
           )}
-          <Player isJumping={isJumping} />
+          <Player isJumping={isJumping} isGameRunning={isGameRunning} />
           <Obstacle obstaclePosition={obstaclePosition} />
         </div>
       </section>

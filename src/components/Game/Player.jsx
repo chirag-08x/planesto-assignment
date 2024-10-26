@@ -1,11 +1,12 @@
 import styled from "@emotion/styled";
 import PlayerGif from "../../assets/player-gif.webp";
 import React from "react";
+import PlayerStatic from "../../assets/player-stop.png";
 
-const Player = React.memo(({ isJumping }) => {
+const Player = React.memo(({ isJumping, isGameRunning }) => {
   return (
     <PlayerWrapper isJumping={isJumping}>
-      <img src={PlayerGif} alt="" />
+      <img src={isGameRunning ? PlayerGif : PlayerStatic} alt="" />
     </PlayerWrapper>
   );
 });
