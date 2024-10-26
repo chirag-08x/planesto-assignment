@@ -85,14 +85,17 @@ const Game = () => {
         if (isGameRunning) {
           jump();
         } else {
-          // setIsGameRunning(true);
           restartGame();
         }
       }
     };
 
     const handleTouch = () => {
-      jump();
+      if (isGameRunning) {
+        jump();
+      } else {
+        restartGame();
+      }
     };
 
     document.addEventListener("keydown", handleSpaceBar);
@@ -120,7 +123,7 @@ const Game = () => {
           <Obstacle obstaclePosition={obstaclePosition} />
         </div>
 
-        <h2>{!isGameRunning && "Press SPACE to start the Game"} </h2>
+        <h3>{!isGameRunning && "Press SPACE to start the Game"} </h3>
       </section>
     </Wrapper>
   );
@@ -135,9 +138,10 @@ const Wrapper = styled.div`
       margin-right: 5px;
     }
 
-    > h2 {
+    > h3 {
       text-align: center;
       color: #515050;
+      margin-top: 10px;
     }
 
     > div {
