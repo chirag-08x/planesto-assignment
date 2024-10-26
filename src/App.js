@@ -1,11 +1,20 @@
+import styled from "@emotion/styled";
 import Game from "./components/Game/Game";
 
 function App() {
   return (
-    <div>
+    <Wrapper>
+      <h1>Chrom Dino Game</h1>
       <Game />
-    </div>
+    </Wrapper>
   );
 }
 
 export default App;
+
+const Wrapper = styled.div`
+  > h1 {
+    text-align: center;
+    padding: 3rem 0;
+  }
+`;
