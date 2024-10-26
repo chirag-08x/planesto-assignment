@@ -1,79 +1,106 @@
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import { useState, useEffect, useRef } from "react";
+import RestartImg from "../../assets/restart.png";
+import Player from "./Player";
+import Obstacle from "./Obstacle";
 
 const Game = () => {
   const [obstaclePosition, setObstaclePosition] = useState(100);
-  const [isJumping, setIsJuming] = useState(false);
+  const [isJumping, setIsJumping] = useState(false);
   const [isGameRunning, setIsGameRunning] = useState(true);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [score, setScore] = useState(0);
 
   const jump = () => {
-    if (!isJumping) {
-      setIsJuming(true);
+    if (!isJumping && isGameRunning) {
+      setIsJumping(true);
       setTimeout(() => {
-        setIsJuming(false);
+        setIsJumping(false);
       }, 500);
     }
   };
 
-  const resetGame = () => {
+  const resetObstacle = () => {
+    setObstaclePosition(100);
+  };
+
+  const restartGame = () => {
     setIsGameRunning(true);
-    setIsGameOver(true);
-    setIsJuming(false);
+    setIsGameOver(false);
     setObstaclePosition(100);
   };
 
   const checkCollision = () => {
     const playerLeft = 50;
-    const playerRight = playerLeft + 30;
+    const playerRight = playerLeft + 70;
 
     const obstacleLeft = (obstaclePosition / 100) * window.innerWidth;
-    const obstacleRight = obstacleLeft + 65;
+    const obstacleRight = obstacleLeft + 80;
 
     if (
       obstacleLeft <= playerRight &&
       obstacleRight >= playerLeft &&
       !isJumping
     ) {
-      console.log("collision detected");
       setIsGameRunning(false);
       setIsGameOver(true);
     }
   };
 
   useEffect(() => {
-    checkCollision();
-  }, [obstaclePosition]);
+    if (isGameRunning) {
+      const interval = setInterval(() => {
+        setObstaclePosition((prev) => {
+          if (prev < -10) {
+            resetObstacle();
+            return 100;
+          }
+          return prev - 2;
+        });
+      }, 30);
+
+      return () => clearInterval(interval);
+    }
+  }, [isGameRunning]);
+
+  useEffect(() => {
+    if (isGameRunning) {
+      checkCollision();
+    }
+  }, [obstaclePosition, isJumping, isGameRunning]);
 
   useEffect(() => {
     const handleSpaceBar = (e) => {
-      if (e.code === "Space") jump();
+      if (e.code === "Space" && isGameRunning) jump();
+    };
+
+    const handleTouch = () => {
+      jump();
     };
 
     document.addEventListener("keydown", handleSpaceBar);
-    return () => document.removeEventListener("keydown", handleSpaceBar);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setObstaclePosition((prev) => {
-        if (prev < -10) {
-          return 100;
-        } else {
-          return prev - 1;
-        }
-      });
-    }, 10);
-
-    return () => clearInterval(interval);
-  }, []);
+    document.addEventListener("touchstart", handleTouch);
+    return () => {
+      document.removeEventListener("keydown", handleSpaceBar);
+      document.removeEventListener("touchstart", handleTouch);
+    };
+  }, [isJumping, isGameRunning]);
 
   return (
     <Wrapper>
       <section className="section-center">
-        <div className="inner-wrapper">
+        <h1>Score: {score}</h1>
+        <div>
+          {isGameOver && (
+            <div className="game-over">
+              <p>GAME OVER</p>
+              <button onClick={restartGame}>
+                <img src={RestartImg} alt="" />
+              </button>
+            </div>
+          )}
           <Player isJumping={isJumping} />
-          <Obstacle positon={obstaclePosition} />
+          <Obstacle obstaclePosition={obstaclePosition} />
         </div>
       </section>
     </Wrapper>
@@ -83,28 +110,51 @@ const Game = () => {
 export default Game;
 
 const Wrapper = styled.div`
-  .inner-wrapper {
-    min-height: 300px;
-    background-color: cyan;
-    position: relative;
-    overflow: hidden;
-  }
-`;
+  .section-center {
+    > h1 {
+      text-align: right;
+      margin-right: 5px;
+    }
 
-const Player = styled.div`
-  height: 75px;
-  width: 75px;
-  background-color: red;
-  position: absolute;
-  left: 50px;
-  bottom: ${(props) => (props.isJumping ? "150px" : 0)};
-  transition: all 0.15s linear;
-`;
-const Obstacle = styled.div`
-  height: 120px;
-  width: 65px;
-  background-color: purple;
-  position: absolute;
-  left: ${(props) => `${props.positon}%`};
-  bottom: 0;
+    > div {
+      min-height: 350px;
+      /* background: url("https://wallpapers.com/images/hd/sunrise-aesthetic-anime-art-desktop-txpgq2aaue31ektv.jpg"); */
+      background: url("https://static.vecteezy.com/system/resources/previews/000/524/720/non_2x/fantasy-wide-sci-fi-martian-background-for-ui-game-vector.jpg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+
+      .game-over {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 10px;
+        padding: 1rem 0.5rem;
+        width: 50%;
+        max-width: 200px;
+        display: grid;
+        place-items: center;
+
+        p {
+          font-weight: bold;
+          font-size: 24px;
+          letter-spacing: 1px;
+          text-align: center;
+        }
+
+        button {
+          margin-top: 20px;
+          display: block;
+          cursor: pointer;
+          background: transparent;
+        }
+      }
+    }
+  }
 `;
