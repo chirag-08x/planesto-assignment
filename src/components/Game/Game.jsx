@@ -28,6 +28,7 @@ const Game = () => {
     setIsGameRunning(true);
     setIsGameOver(false);
     setObstaclePosition(100);
+    setScore(0);
   };
 
   const checkCollision = () => {
