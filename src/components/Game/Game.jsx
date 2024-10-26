@@ -65,6 +65,15 @@ const Game = () => {
 
   useEffect(() => {
     if (isGameRunning) {
+      const interval = setInterval(() => {
+        setScore((prev) => prev + 1);
+      }, 150);
+      return () => clearInterval(interval);
+    }
+  }, [isGameRunning]);
+
+  useEffect(() => {
+    if (isGameRunning) {
       checkCollision();
     }
   }, [obstaclePosition, isJumping, isGameRunning]);
