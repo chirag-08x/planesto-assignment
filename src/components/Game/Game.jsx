@@ -10,7 +10,7 @@ const Game = () => {
   const [isGameRunning, setIsGameRunning] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [score, setScore] = useState(0);
-  const jumpDuration = window.innerWidth < 768 ? 800 : 500;
+  const jumpDuration = window.innerWidth < 768 ? 1000 : 500;
 
   const jump = () => {
     if (!isJumping && isGameRunning) {
@@ -59,7 +59,7 @@ const Game = () => {
           }
           return prev - 2;
         });
-      }, 30);
+      }, 40);
 
       return () => clearInterval(interval);
     }
@@ -81,23 +81,16 @@ const Game = () => {
   }, [obstaclePosition, isJumping, isGameRunning]);
 
   useEffect(() => {
-    // const handleSpaceBar = (e) => {
-    //   if (e.code === "Space") {
-    //     if (isGameRunning) {
-    //       jump();
-    //     } else {
-    //       restartGame();
-    //     }
-    //   }
-    // };
-
+    let timeoutWait;
     const handleSpaceBar = (e) => {
-      if (e.code === "Space" && !isJumping && isGameRunning) {
-        jump();
-      } else if (e.code === "Space" && !isGameRunning) {
-        setTimeout(() => {
-          restartGame();
-        }, 500);
+      if (e.code === "Space") {
+        if (isGameRunning) {
+          jump();
+        } else {
+          timeoutWait = setTimeout(() => {
+            restartGame();
+          }, 500);
+        }
       }
     };
 
@@ -105,7 +98,7 @@ const Game = () => {
       if (isGameRunning) {
         jump();
       } else {
-        setTimeout(() => {
+        timeoutWait = setTimeout(() => {
           restartGame();
         }, 500);
       }
@@ -116,6 +109,7 @@ const Game = () => {
     return () => {
       document.removeEventListener("keyup", handleSpaceBar);
       document.removeEventListener("touchend", handleTouch);
+      clearTimeout(timeoutWait);
     };
   }, [isJumping, isGameRunning]);
 
