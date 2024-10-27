@@ -104,11 +104,11 @@ const Game = () => {
       }
     };
 
-    document.addEventListener("keyup", handleSpaceBar);
-    document.addEventListener("touchend", handleTouch);
+    document.addEventListener("keydown", handleSpaceBar);
+    document.addEventListener("touchstart", handleTouch);
     return () => {
-      document.removeEventListener("keyup", handleSpaceBar);
-      document.removeEventListener("touchend", handleTouch);
+      document.removeEventListener("keydown", handleSpaceBar);
+      document.removeEventListener("touchstart", handleTouch);
       clearTimeout(timeoutWait);
     };
   }, [isJumping, isGameRunning]);
