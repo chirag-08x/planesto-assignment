@@ -16,8 +16,8 @@ export default Player;
 const PlayerWrapper = styled.div`
   position: absolute;
   left: 50px;
-  bottom: ${(props) => (props.isJumping ? "120px" : 0)};
-  transition: bottom 0.15s ease-in-out;
+  bottom: ${(props) => (props.isJumping ? "130px" : 0)};
+  transition: all 250ms ease-in-out;
   z-index: 2;
   width: 70px;
   img {

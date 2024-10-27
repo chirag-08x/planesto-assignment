@@ -81,13 +81,23 @@ const Game = () => {
   }, [obstaclePosition, isJumping, isGameRunning]);
 
   useEffect(() => {
+    // const handleSpaceBar = (e) => {
+    //   if (e.code === "Space") {
+    //     if (isGameRunning) {
+    //       jump();
+    //     } else {
+    //       restartGame();
+    //     }
+    //   }
+    // };
+
     const handleSpaceBar = (e) => {
-      if (e.code === "Space") {
-        if (isGameRunning) {
-          jump();
-        } else {
+      if (e.code === "Space" && !isJumping && isGameRunning) {
+        jump();
+      } else if (e.code === "Space" && !isGameRunning) {
+        setTimeout(() => {
           restartGame();
-        }
+        }, 500);
       }
     };
 
@@ -95,15 +105,17 @@ const Game = () => {
       if (isGameRunning) {
         jump();
       } else {
-        restartGame();
+        setTimeout(() => {
+          restartGame();
+        }, 500);
       }
     };
 
-    document.addEventListener("keydown", handleSpaceBar);
-    document.addEventListener("touchstart", handleTouch);
+    document.addEventListener("keyup", handleSpaceBar);
+    document.addEventListener("touchend", handleTouch);
     return () => {
-      document.removeEventListener("keydown", handleSpaceBar);
-      document.removeEventListener("touchstart", handleTouch);
+      document.removeEventListener("keyup", handleSpaceBar);
+      document.removeEventListener("touchend", handleTouch);
     };
   }, [isJumping, isGameRunning]);
 
