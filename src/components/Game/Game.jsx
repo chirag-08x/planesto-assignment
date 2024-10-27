@@ -10,13 +10,14 @@ const Game = () => {
   const [isGameRunning, setIsGameRunning] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [score, setScore] = useState(0);
+  const jumpDuration = window.innerWidth < 768 ? 800 : 500;
 
   const jump = () => {
     if (!isJumping && isGameRunning) {
       setIsJumping(true);
       setTimeout(() => {
         setIsJumping(false);
-      }, 500);
+      }, jumpDuration);
     }
   };
 
